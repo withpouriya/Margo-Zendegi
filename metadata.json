@@ -1,0 +1,8 @@
+{
+  "name": "Margo Zendegi Album Promo",
+  "description": "A promotional website for the album 'Margo Zendegi' by Sepehr Khalse, featuring tracklist and streaming links.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
