@@ -5,7 +5,6 @@ import { Embers } from './components/Embers';
 import { Hero } from './components/Hero';
 import { Intro } from './components/Intro';
 import { Outro } from './components/Outro';
-import { TopBar } from './components/TopBar';
 import { TrackSection } from './components/TrackSection';
 
 export default function App() {
@@ -20,7 +19,6 @@ export default function App() {
 
       <Atmosphere />
       <Embers />
-      <TopBar />
       <Hero />
 
       <main className="relative z-30">

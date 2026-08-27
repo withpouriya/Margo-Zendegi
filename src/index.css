@@ -20,6 +20,11 @@
   html {
     scroll-behavior: smooth;
     background-color: var(--color-ash);
+
+    /* No chrome down the side of the page. This hides the bar only —
+       overflow and scrolling behave exactly as before. */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* legacy Edge */
   }
 
   body {
@@ -29,17 +34,7 @@
   }
 
   ::-webkit-scrollbar {
-    width: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background: var(--color-ash);
-  }
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-cinder);
-    border-radius: 4px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-ember);
+    display: none; /* WebKit / Blink */
   }
 }
 

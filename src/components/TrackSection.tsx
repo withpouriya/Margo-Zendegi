@@ -83,16 +83,6 @@ export function TrackSection({ track }: Props) {
       )}
 
       <div className="relative z-10 flex w-full max-w-4xl flex-col items-center text-center">
-        {/* Track index rule */}
-        <motion.div
-          style={{ opacity: metaOpacity }}
-          className="mb-6 flex items-center gap-4 font-ui text-[10px] tracking-[0.55em] text-ember/70"
-        >
-          <span className="h-px w-8 bg-gradient-to-r from-transparent to-ember/50" />
-          <span>TRACK {numeral}</span>
-          <span className="h-px w-8 bg-gradient-to-l from-transparent to-ember/50" />
-        </motion.div>
-
         {/* The title itself */}
         <motion.div style={{ y: titleY, scale: titleScale }} className="w-full">
           <SmokeText
