@@ -1,3 +1,10 @@
 name = "margo-zendegi"
-compatibility_date = "2024-08-17"
-assets = "./dist"
+compatibility_date = "2025-09-01"
+
+# Static-asset-only Worker: Vite writes the site to ./dist and Cloudflare
+# serves it directly. There is no Worker script, so no `main` entrypoint.
+[assets]
+directory = "./dist"
+# Single build artifact with no server routes — any unmatched path falls
+# back to index.html rather than a bare 404.
+not_found_handling = "single-page-application"

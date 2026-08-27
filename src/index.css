@@ -1,17 +1,124 @@
 @import "tailwindcss";
 
+@theme {
+  --color-ash: #050202;
+  --color-ember: #d62828;
+  --color-cinder: #370617;
+
+  --font-display: "Playfair Display", ui-serif, Georgia, serif;
+  --font-ui: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--color-ash);
+  }
+
+  body {
+    background-color: var(--color-ash);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
   ::-webkit-scrollbar {
     width: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: #050202;
+    background: var(--color-ash);
   }
   ::-webkit-scrollbar-thumb {
-    background: #370617;
+    background: var(--color-cinder);
     border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #d62828;
+    background: var(--color-ember);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Ambient motion. Every keyframe here animates transform/opacity only, so the
+   drifting layers stay on the compositor and never trigger layout.
+   --------------------------------------------------------------------------- */
+
+@keyframes mz-drift-a {
+  from {
+    transform: scale(var(--mz-scale, 2.4)) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(var(--mz-scale, 2.4)) translate3d(-8%, -12%, 0);
+  }
+}
+
+@keyframes mz-drift-b {
+  from {
+    transform: scale(var(--mz-scale, 1.8)) translate3d(0, 0, 0) rotate(0deg);
+  }
+  to {
+    transform: scale(var(--mz-scale, 1.8)) translate3d(9%, -9%, 0) rotate(4deg);
+  }
+}
+
+@keyframes mz-bloom {
+  0% {
+    transform: translate(-50%, -50%) scale(1) translate3d(0, 0, 0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.18) translate3d(2%, -3%, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.94) translate3d(-2%, 2%, 0);
+    opacity: 0.7;
+  }
+}
+
+@keyframes mz-ember {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.6);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate3d(var(--mz-drift, 0px), -112vh, 0) scale(1.1);
+    opacity: 0;
+  }
+}
+
+@keyframes mz-cue {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+    opacity: 0.3;
+    transform-origin: top;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+    transform-origin: top;
+  }
+}
+
+.mz-cue {
+  animation: mz-cue 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 }
