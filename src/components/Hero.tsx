@@ -53,7 +53,6 @@ export function Hero() {
 
   const iconsOpacity = useTransform(scrollY, [0, 300], [1, 0]);
   const iconScale = useTransform(scrollY, [0, 300], [1, 0.5]);
-  const cueOpacity = useTransform(scrollY, [0, 160], [1, 0]);
 
   return (
     <>
@@ -91,7 +90,7 @@ export function Hero() {
             {ALBUM.artist}
           </motion.p>
           <h1 className="font-display text-2xl uppercase tracking-[0.34em] text-transparent sm:text-3xl md:text-4xl">
-            <span className="bg-gradient-to-b from-white to-ember bg-clip-text drop-shadow-[0_0_30px_rgba(214,40,40,0.5)]">
+            <span className="bg-gradient-to-b from-smoke from-8% via-blood via-70% to-clot bg-clip-text drop-shadow-[0_0_30px_rgba(160,28,28,0.55)]">
               {ALBUM.title}
             </span>
           </h1>
@@ -112,16 +111,6 @@ export function Hero() {
             scale={iconScale}
           />
         ))}
-      </motion.div>
-
-      {/* Scroll cue */}
-      <motion.div
-        style={{ opacity: cueOpacity }}
-        className="pointer-events-none fixed bottom-5 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2 md:bottom-7"
-        aria-hidden
-      >
-        <span className="font-ui text-[9px] uppercase tracking-[0.5em] text-white/35">Scroll</span>
-        <span className="mz-cue h-8 w-px bg-gradient-to-b from-ember/70 to-transparent" />
       </motion.div>
     </>
   );

@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { motion, useMotionValueEvent, useScroll, useTransform } from 'motion/react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import type { Track } from '../data/tracks';
 import { SmokeText } from './SmokeText';
 import { useSmokeQuality } from '../hooks/useSmokeQuality';
@@ -17,11 +17,9 @@ const FEAT_STOPS = [0.24, 0.48, 0.55, 0.78];
 
 type Props = {
   track: Track;
-  index: number;
-  onActive: (index: number) => void;
 };
 
-export function TrackSection({ track, index, onActive }: Props) {
+export function TrackSection({ track }: Props) {
   const ref = useRef<HTMLElement | null>(null);
   const quality = useSmokeQuality();
 
@@ -47,10 +45,6 @@ export function TrackSection({ track, index, onActive }: Props) {
 
   const ruleScale = useTransform(focus, [0.35, 1], [0, 1]);
   const metaOpacity = useTransform(focus, [0.15, 0.7], [0, 1]);
-
-  useMotionValueEvent(focus, 'change', (v) => {
-    if (v > 0.55) onActive(index);
-  });
 
   const numeral = String(track.id).padStart(2, '0');
 
@@ -113,7 +107,7 @@ export function TrackSection({ track, index, onActive }: Props) {
               style={{ letterSpacing }}
               className="font-display text-[2.6rem] font-medium uppercase leading-[1.05] text-transparent sm:text-6xl md:text-7xl lg:text-8xl"
             >
-              <span className="bg-gradient-to-b from-white via-[#f4c3c3] to-ember bg-clip-text drop-shadow-[0_0_36px_rgba(214,40,40,0.45)]">
+              <span className="bg-gradient-to-b from-smoke from-6% via-blood via-52% to-clot bg-clip-text drop-shadow-[0_0_36px_rgba(160,28,28,0.5)]">
                 {track.title}
               </span>
             </motion.h2>

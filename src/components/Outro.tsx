@@ -22,7 +22,7 @@ export function Outro() {
       <motion.div style={{ y: lift }} className="flex flex-col items-center gap-7">
         <SmokeText focus={focus} strength={70} blur={16} band={64} seed={91}>
           <h2 className="font-display text-4xl uppercase tracking-[0.3em] text-transparent sm:text-5xl md:text-6xl">
-            <span className="bg-gradient-to-b from-white via-[#f2bcbc] to-ember bg-clip-text drop-shadow-[0_0_40px_rgba(214,40,40,0.5)]">
+            <span className="bg-gradient-to-b from-smoke from-6% via-blood via-52% to-clot bg-clip-text drop-shadow-[0_0_40px_rgba(160,28,28,0.55)]">
               Out Now
             </span>
           </h2>
