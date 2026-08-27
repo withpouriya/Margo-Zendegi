@@ -1,6 +1,13 @@
 name = "margo-zendegi"
 compatibility_date = "2025-09-01"
 
+# Workers Builds runs the deploy command directly, and a project created
+# without a build command goes straight from `npm ci` to `npx wrangler
+# deploy` — leaving no ./dist to upload. Running the build from here makes
+# the deploy self-contained whatever the dashboard is set to.
+[build]
+command = "npm run build"
+
 # Static-asset-only Worker: Vite writes the site to ./dist and Cloudflare
 # serves it directly. There is no Worker script, so no `main` entrypoint.
 [assets]
