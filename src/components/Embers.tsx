@@ -15,9 +15,14 @@ function mulberry32(seed: number) {
 export function Embers({ count = 22 }: { count?: number }) {
   const quality = useSmokeQuality();
 
+  // Each spark is its own composited layer carrying a box-shadow and a
+  // never-ending transform. That is affordable in isolation but not on top of
+  // the ambient layers, so the field thins out where those already cost most.
+  const total = quality === 'full' ? count : Math.min(count, 10);
+
   const particles = useMemo(() => {
     const rand = mulberry32(0x5eed);
-    return Array.from({ length: count }, (_, i) => ({
+    return Array.from({ length: total }, (_, i) => ({
       id: i,
       left: rand() * 100,
       size: 1 + rand() * 2.6,
@@ -26,7 +31,7 @@ export function Embers({ count = 22 }: { count?: number }) {
       drift: (rand() - 0.5) * 140,
       opacity: 0.25 + rand() * 0.45,
     }));
-  }, [count]);
+  }, [total]);
 
   if (quality === 'off') return null;
 

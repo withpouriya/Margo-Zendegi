@@ -39,9 +39,10 @@ function ScatterIcon({ platform, target, scrollY, scale }: ScatterIconProps) {
 export function Hero() {
   const quality = useSmokeQuality();
   const { scrollY } = useScroll();
+  const full = quality === 'full';
 
   // The artwork lifts clean out of frame rather than shrinking into a
-  // watermark. It travels ~1.4x the scroll, so it pulls away from the page
+  // watermark. It travels ~1.1x the scroll, so it pulls away from the page
   // instead of riding with it, and it holds its size the whole way — the
   // slight scale-up reads as passing the camera, not receding.
   //
@@ -69,21 +70,47 @@ export function Hero() {
       {/* Fixed artwork */}
       <div className="pointer-events-none fixed inset-0 z-10 flex flex-col items-center justify-center">
         <motion.div
+          // scale/y/rotate/opacity all stay on the compositor. `filter` does
+          // not: because it changes every frame it re-rasters this whole
+          // subtree — glow, artwork, drop-shadow and all — on each one.
+          // Measured at 6x throttle it cost ~26fps by itself, so the motion
+          // blur is a `full`-only luxury.
           style={{
             scale: headScale,
             y: headY,
             rotate: headRotate,
             opacity: headOpacity,
-            filter: headBlur,
+            filter: full ? headBlur : undefined,
           }}
           className="relative flex w-56 items-center justify-center sm:w-64 md:w-80"
         >
-          <div className="absolute inset-0 scale-125 rounded-full bg-ember/25 opacity-60 blur-3xl" />
+          {full ? (
+            <div className="absolute inset-0 scale-125 rounded-full bg-ember/25 opacity-60 blur-3xl" />
+          ) : (
+            // Same bloom, painted rather than filtered: a radial gradient is
+            // soft on its own and needs no blur pass behind the artwork.
+            //
+            // `closest-side` matters here. The default (farthest-corner) sizes
+            // the circle to the corner of this tall box, which leaves the
+            // gradient still ~10% opaque where it meets the left and right
+            // edges — a visible hard rectangle. Sizing to the nearest edge
+            // instead means it reaches full transparency before any edge, so
+            // there is nothing to clip and no seam to see.
+            <div
+              className="absolute inset-0 scale-[1.7] opacity-70"
+              style={{
+                background:
+                  'radial-gradient(circle closest-side, rgba(214,40,40,0.30) 0%, rgba(214,40,40,0.12) 46%, transparent 92%)',
+              }}
+            />
+          )}
           <motion.img
             src={headImage}
             alt={`${ALBUM.title} cover artwork`}
-            className="relative z-10 h-auto w-full drop-shadow-[0_0_46px_rgba(214,40,40,0.45)]"
-            animate={quality === 'off' ? undefined : { y: [0, -16, 0] }}
+            className={`relative z-10 h-auto w-full${
+              full ? ' drop-shadow-[0_0_46px_rgba(214,40,40,0.45)]' : ''
+            }`}
+            animate={full ? { y: [0, -16, 0] } : undefined}
             transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
           />
         </motion.div>

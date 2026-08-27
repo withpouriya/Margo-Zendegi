@@ -26,6 +26,7 @@ export function Atmosphere() {
   const bgDim = useTransform(scrollY, [0, 900], [0.58, 0.82]);
 
   const animated = quality !== 'off';
+  const full = quality === 'full';
 
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
@@ -51,7 +52,11 @@ export function Atmosphere() {
             height: glow.size,
             transform: 'translate(-50%, -50%)',
             background: `radial-gradient(circle at 50% 50%, ${glow.hue} 0%, transparent 68%)`,
-            filter: 'blur(48px)',
+            // The gradient already fades to nothing by 68%; the blur only
+            // rounds off the last of the banding. It is also a full-surface
+            // filter pass on a 48-66vw box that never stops animating, so
+            // outside `full` the banding is the cheaper trade.
+            filter: full ? 'blur(48px)' : undefined,
             animation: animated
               ? `mz-bloom ${glow.duration}s ease-in-out ${glow.delay}s infinite alternate`
               : undefined,
@@ -59,9 +64,17 @@ export function Atmosphere() {
         />
       ))}
 
-      {/* Smoke sheets */}
+      {/* Smoke sheets.
+
+          Measured at 6x CPU throttle on a 390px viewport, these are by far the
+          most expensive thing on the page: dropping them took the scroll from
+          13fps to 33fps on their own. Each one stacks a blur, a mask and a
+          `screen` blend on a surface 180% of the viewport in both axes, and
+          then animates a transform under all three — so none of it can stay a
+          cheap composited layer. `full` still gets all three; everything else
+          gets one, unblurred, which keeps the drift without the raster cost. */}
       {animated &&
-        SHEETS.map((sheet, i) => (
+        (full ? SHEETS : SHEETS.slice(0, 1)).map((sheet, i) => (
           <div
             key={i}
             className="absolute inset-[-40%]"
@@ -70,7 +83,7 @@ export function Atmosphere() {
               backgroundRepeat: 'repeat',
               opacity: sheet.opacity,
               mixBlendMode: 'screen',
-              filter: `blur(${sheet.blur}px)`,
+              filter: full ? `blur(${sheet.blur}px)` : undefined,
               // The keyframes own `transform`, so the scale travels as a variable.
               ['--mz-scale' as string]: String(sheet.scale),
               animation: `${sheet.reverse ? 'mz-drift-b' : 'mz-drift-a'} ${sheet.duration}s linear infinite alternate`,
